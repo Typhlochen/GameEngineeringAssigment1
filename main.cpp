@@ -48,13 +48,12 @@ constexpr GLint NUMBER_OF_TEXTURES = 1, // to be generated, that is
 LEVEL_OF_DETAIL = 0, // mipmap reduction image level
 TEXTURE_BORDER = 0; // this value MUST be zero
 
-// source: https://kiminoiro.jp/
+// source: google images
 constexpr char BS_SPRITE_FILEPATH[] = "BlueShell.png",
-MARIO_SPRITE_FILEPATH[] = "Mario.png";
+MARIO_SPRITE_FILEPATH[] = "Mario.png",
+TRACK_SPRITE_FILEPATH[] = "Track.png";
 
-constexpr glm::vec3 INIT_SCALE = glm::vec3(5.0f, 5.98f, 0.0f),
-INIT_POS_KIMI = glm::vec3(2.0f, 0.0f, 0.0f),
-INIT_POS_TOTSUKO = glm::vec3(-2.0f, 0.0f, 0.0f);
+constexpr glm::vec3 INIT_SCALE = glm::vec3(5.0f, 5.98f, 0.0f);
 
 constexpr float ROT_INCREMENT = 1.0f;
 
@@ -65,17 +64,18 @@ ShaderProgram g_shader_program = ShaderProgram();
 glm::mat4 g_view_matrix,
 g_model_matrix,
 g_model_matrix_2,
+g_background,
 g_projection_matrix;
 
 glm::vec3 g_rotation_kimi = glm::vec3(0.0f, 0.0f, 0.0f),
 g_rotation_totsuko = glm::vec3(0.0f, 0.0f, 0.0f);
 
 GLuint g_bs_texture_id,
-g_mario_texture_id;
+g_mario_texture_id,
+g_track_texture_id;
 
 float g_previous_ticks = 0.0f;
 
-float verticak_movement = 0.0f;
 float horizontal_movement = 0.0f;
 
 float theta = 0.0f;
@@ -144,6 +144,7 @@ void initialise()
 
     g_model_matrix = glm::mat4(1.0f);
     g_model_matrix_2 = glm::mat4(1.0f);
+    g_background = glm::mat4(1.0f);
     g_view_matrix = glm::mat4(1.0f);
     g_projection_matrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
@@ -156,6 +157,7 @@ void initialise()
 
     g_bs_texture_id = load_texture(BS_SPRITE_FILEPATH);
     g_mario_texture_id = load_texture(MARIO_SPRITE_FILEPATH);
+    g_track_texture_id = load_texture(TRACK_SPRITE_FILEPATH);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -185,39 +187,15 @@ void update()
     rotation_amount += ANGLE * g_delta_time;
     theta += 1.0f * g_delta_time;
 
+    g_background = glm::mat4(1.0f);
     g_model_matrix = glm::mat4(1.0f);
     g_model_matrix_2 = glm::mat4(1.0f);
-    g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(horizontal_movement, 0.0f, 0.0f));
+    g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(horizontal_movement, -0.7f, 0.0f));
     g_model_matrix_2 = glm::scale(g_model_matrix_2, glm::vec3(glm::sin(theta/0.5f) * 0.5f + 1.0f, glm::sin(theta/0.5f) * 0.5f + 1.0f, 0.0f));
     g_model_matrix = glm::translate(g_model_matrix_2, glm::vec3(2.0f * glm::sin(theta), 2.0f * glm::cos(theta), 0.0f));
     g_model_matrix = glm::rotate(g_model_matrix, rotation_amount, glm::vec3(0.0f, 0.0f, 1.0f));
-
-
-    ///* Delta time calculations */
-    //float ticks = (float)SDL_GetTicks() / MILLISECONDS_IN_SECOND;
-    //float delta_time = ticks - g_previous_ticks;
-    //g_previous_ticks = ticks;
-
-    ///* Game logic */
-    //g_rotation_kimi.y += ROT_INCREMENT * delta_time;
-    //g_rotation_totsuko.y += -1 * ROT_INCREMENT * delta_time;
-
-    ///* Model matrix reset */
-    //g_kimi_matrix = glm::mat4(1.0f);
-    //g_totsuko_matrix = glm::mat4(1.0f);
-
-    ///* Transformations */
-    //g_kimi_matrix = glm::translate(g_kimi_matrix, INIT_POS_KIMI);
-    //g_kimi_matrix = glm::rotate(g_kimi_matrix,
-    //    g_rotation_kimi.y,
-    //    glm::vec3(0.0f, 1.0f, 0.0f));
-    //g_kimi_matrix = glm::scale(g_kimi_matrix, INIT_SCALE);
-
-    //g_totsuko_matrix = glm::translate(g_totsuko_matrix, INIT_POS_TOTSUKO);
-    //g_totsuko_matrix = glm::rotate(g_totsuko_matrix,
-    //    g_rotation_totsuko.y,
-    //    glm::vec3(0.0f, 1.0f, 0.0f));
-    //g_totsuko_matrix = glm::scale(g_totsuko_matrix, INIT_SCALE);
+    g_background = glm::rotate(g_background, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    g_background = glm::scale(g_background, glm::vec3(7.5f, 10.0f, 0.0f));
 }
 
 
@@ -256,6 +234,7 @@ void render()
     glEnableVertexAttribArray(g_shader_program.get_tex_coordinate_attribute());
 
     // Bind texture
+    draw_object(g_background, g_track_texture_id);
     draw_object(g_model_matrix, g_bs_texture_id);
     draw_object(g_model_matrix_2, g_mario_texture_id);
 
