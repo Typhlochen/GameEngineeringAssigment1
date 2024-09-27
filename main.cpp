@@ -78,6 +78,8 @@ float g_previous_ticks = 0.0f;
 float verticak_movement = 0.0f;
 float horizontal_movement = 0.0f;
 
+float theta = 0.0f;
+
 float rotation_amount = 0.0f;
 
 constexpr float ANGLE = glm::radians(45.0);
@@ -181,12 +183,13 @@ void update()
 
     horizontal_movement += 1.0f * g_delta_time * glm::cos(g_ticks);
     rotation_amount += ANGLE * g_delta_time;
+    theta += 1.0f * g_delta_time;
 
     g_model_matrix = glm::mat4(1.0f);
     g_model_matrix_2 = glm::mat4(1.0f);
     g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(horizontal_movement, 0.0f, 0.0f));
-    g_model_matrix_2 = glm::scale(g_model_matrix_2, glm::vec3(glm::sin(g_ticks/0.5f) * 0.5f + 1.0f, glm::sin(g_ticks/0.5f) * 0.5f + 1.0f, 0.0f));
-    g_model_matrix = glm::translate(g_model_matrix_2, glm::vec3(2.0f * glm::sin(g_ticks), 2.0f * glm::cos(g_ticks), 0.0f));
+    g_model_matrix_2 = glm::scale(g_model_matrix_2, glm::vec3(glm::sin(theta/0.5f) * 0.5f + 1.0f, glm::sin(theta/0.5f) * 0.5f + 1.0f, 0.0f));
+    g_model_matrix = glm::translate(g_model_matrix_2, glm::vec3(2.0f * glm::sin(theta), 2.0f * glm::cos(theta), 0.0f));
     g_model_matrix = glm::rotate(g_model_matrix, rotation_amount, glm::vec3(0.0f, 0.0f, 1.0f));
 
 
