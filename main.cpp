@@ -183,9 +183,9 @@ void update()
     float g_delta_time = g_ticks - g_previous_ticks;       // the delta time is the difference from the last frame
     g_previous_ticks = g_ticks;
 
-    horizontal_movement += 1.0f * g_delta_time * glm::cos(g_ticks);
     rotation_amount += ANGLE * g_delta_time;
     theta += 1.0f * g_delta_time;
+    horizontal_movement += glm::cos(theta) * g_delta_time;
 
     g_background = glm::mat4(1.0f);
     g_model_matrix = glm::mat4(1.0f);
