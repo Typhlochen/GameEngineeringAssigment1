@@ -29,9 +29,9 @@ enum AppStatus { RUNNING, TERMINATED };
 constexpr int WINDOW_WIDTH = 640 * 2,
 WINDOW_HEIGHT = 480 * 2;
 
-constexpr float BG_RED = 0.9765625f,
-BG_GREEN = 0.97265625f,
-BG_BLUE = 0.9609375f,
+constexpr float BG_RED = 0.827f,
+BG_GREEN = 0.827f,
+BG_BLUE = 0.827f,
 BG_OPACITY = 1.0f;
 
 constexpr int VIEWPORT_X = 0,
