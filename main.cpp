@@ -77,6 +77,7 @@ g_track_texture_id;
 float g_previous_ticks = 0.0f;
 
 float horizontal_movement = 0.0f;
+float vertical_movement = 0.0f;
 
 float theta = 0.0f;
 
@@ -186,11 +187,13 @@ void update()
     rotation_amount += ANGLE * g_delta_time;
     theta += 1.0f * g_delta_time;
     horizontal_movement += glm::cos(theta) * g_delta_time;
+    vertical_movement += glm::sin(theta) * g_delta_time;
 
     g_background = glm::mat4(1.0f);
     g_model_matrix = glm::mat4(1.0f);
     g_model_matrix_2 = glm::mat4(1.0f);
-    g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(horizontal_movement, -0.7f, 0.0f));
+    g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(0.0f, -0.7f, 0.0f));
+    g_model_matrix_2 = glm::translate(g_model_matrix_2, glm::vec3(3.0f * horizontal_movement, vertical_movement, 0.0f));
     g_model_matrix_2 = glm::scale(g_model_matrix_2, glm::vec3(glm::sin(theta/0.5f) * 0.5f + 1.0f, glm::sin(theta/0.5f) * 0.5f + 1.0f, 0.0f));
     g_model_matrix = glm::translate(g_model_matrix_2, glm::vec3(2.0f * glm::sin(theta), 2.0f * glm::cos(theta), 0.0f));
     g_model_matrix = glm::rotate(g_model_matrix, rotation_amount, glm::vec3(0.0f, 0.0f, 1.0f));
